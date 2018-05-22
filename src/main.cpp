@@ -31,35 +31,35 @@ std::string readString(const std::string& filename) {
 }
 
 int main() {
-	// init glfw
-	if ( !glfwInit() ) {
-		std::cout << "could not initialize glfw" << std::endl;
+	// Init glfw
+	if (!glfwInit()) {
+		std::cout << "Could not initialize glfw" << std::endl;
 		return -1;
 	}
 
-	// create window
+	// Create window
 	//glfwWindowHint(GLFW_RESIZABLE, false);
 	glfwWindowHint(GLFW_SAMPLES, 8);
 	GLFWwindow* win = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "", nullptr, nullptr);
 	if (!win) {
-		std::cout << "could not create opengl window" << std::endl;
+		std::cout << "Could not create opengl window" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
 	glfwMakeContextCurrent(win);
 
-	// initialize opengl extensions
-	if ( glewInit() != GLEW_OK ) {
-		std::cout << "could not initialize opengl extensions" << std::endl;
+	// Initialize opengl extensions
+	if (glewInit() != GLEW_OK) {
+		std::cout << "Could not initialize opengl extensions" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
 
-	// load shaders code
+	// Load shader's code
 	std::string vertexShaderSource = readString("data/vertex.glsl");
 	std::string fragmentShaderSource = readString("data/fragment.glsl");
 
-	// create vertex shader
+	// Create vertex shader
 	int retCode;
 	const char* cVertexShaderSource = vertexShaderSource.c_str();
 	uint32_t vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -69,17 +69,13 @@ int main() {
 	if (retCode == GL_FALSE) {
 		char errorLog[1024];
 		glGetShaderInfoLog(vertexShader, sizeof(errorLog), nullptr, errorLog);
-		std::cout
-			<< "vertex shader could not be compiled:"
-			<< std::endl
-			<< errorLog
-			<< std::endl;
+		std::cout << "Error: Vertex shader could not be compiled:" << std::endl << errorLog << std::endl;
 		glDeleteShader(vertexShader);
 		glfwTerminate();
 		return -1;
 	}
 
-	// create fragment shader
+	// Create fragment shader
 	const char* cFragmentShaderSource = fragmentShaderSource.c_str();
 	uint32_t fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &cFragmentShaderSource, nullptr);
@@ -88,18 +84,14 @@ int main() {
 	if (retCode == GL_FALSE) {
 		char errorLog[1024];
 		glGetShaderInfoLog(fragmentShader, sizeof(errorLog), nullptr, errorLog);
-		std::cout
-			<< "fragment shader could not be compiled:"
-			<< std::endl
-			<< errorLog
-			<< std::endl;
+		std::cout << "Error: Fragment shader could not be compiled:" << std::endl << errorLog << std::endl;
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
 		glfwTerminate();
 		return -1;
 	}
 
-	// create and link program
+	// Create and link program
 	uint32_t program = glCreateProgram();
 	glAttachShader(program, vertexShader);
 	glAttachShader(program, fragmentShader);
@@ -110,11 +102,7 @@ int main() {
 	if (retCode == GL_FALSE) {
 		char errorLog[1024];
 		glGetProgramInfoLog(program, sizeof(errorLog), nullptr, errorLog);
-		std::cout
-			<< "program could not be linked:"
-			<< std::endl
-			<< errorLog
-			<< std::endl;
+		std::cout << "Error: Program could not be linked:" << std::endl << errorLog << std::endl;
 		glDeleteProgram(program);
 		glfwTerminate();
 		return -1;
@@ -155,29 +143,29 @@ int main() {
 	//glVertexPointer(2, GL_FLOAT, sizeof(Vertex), &vertices[0].x); // ***
 	//glColorPointer(3, GL_FLOAT, sizeof(Vertex), &vertices[0].r); // ***
 
-	// main loop
+	// Main loop
 	double lastTime = glfwGetTime();
 	while ( !glfwWindowShouldClose(win) && !glfwGetKey(win, GLFW_KEY_ESCAPE) ) {
-		// get delta time
+		// Get delta time
 		float deltaTime = static_cast<float>(glfwGetTime() - lastTime);
 		lastTime = glfwGetTime();
 
-		// get window size
+		// Get window size
 		int screenWidth, screenHeight;
 		glfwGetWindowSize(win, &screenWidth, &screenHeight);
 
-		// setup viewport
+		// Setup viewport
 		glViewport(0, 0, screenWidth, screenHeight);
 		glScissor(0, 0, screenWidth, screenHeight);
 
-		// clear screen
+		// Clear screen
 		glClearColor(0, 0, 0, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// draw with vertex arrays & vbos
+		// Draw with vertex arrays & vbos
 		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 		
-		// draw with glBegin ... glEnd
+		// Draw with glBegin ... glEnd
 		/*glBegin(GL_TRIANGLES);
 			glColor4f(1, 0, 0, 1);
 			glVertex2f(0, 1);
@@ -187,12 +175,12 @@ int main() {
 			glVertex2f(1, -1);
 		glEnd();*/
 
-		// refresh screen
+		// Refresh screen
 		glfwSwapBuffers(win);
 		glfwPollEvents();
 	}
 
-	// shutdown
+	// Shutdown
 	glDeleteProgram(program);
 	glDeleteBuffers(1, &vertexBuffer);
 	glfwTerminate();
