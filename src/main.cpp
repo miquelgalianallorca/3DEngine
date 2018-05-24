@@ -100,9 +100,10 @@ int main()
 		glScissor (0, 0, screenWidth, screenHeight);
 		
 		// Clear screen
-		glClearColor(0, 0, 0, 1);
+		glClearColor(.1, .1, .1, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
+        // Update logic
         currentAngle += deltaTime * rotationSpeed;
 
 		// Calculate Model-View-Projection matrix
@@ -120,14 +121,19 @@ int main()
 		// Draw triangles
 		for (size_t i = 0; i < 9; ++i)
 		{
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0)) * 
+            // Positioning
+            int row = i / 3;
+            int col = i % 3;
+            glm::vec3 translation(3 - 3 * row, 0, -3 * col);
+
+            // MVP matrix
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), translation) * 
                 glm::rotate(glm::mat4(1.0f), glm::radians(currentAngle), glm::vec3(0, 1, 0)) * 
                 glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1));
+            
             glm::mat4 MVP = projection * view * model;
-
             // Set MVP in shader
-            int mvpLocation = shader->GetLocation("MVP");
-            shader->SetMatrix(mvpLocation, MVP);
+            shader->SetMatrix(shader->GetLocation("MVP"), MVP);
 
             // Draw
             buffer.Draw(*shader);
