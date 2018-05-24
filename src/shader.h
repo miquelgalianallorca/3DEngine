@@ -41,5 +41,5 @@ private:
 	char errorLog[1024];
 
 	uint32_t vertexShader, fragmentShader;
-	int32_t vPosLoc, vColorLoc;
+	int32_t vPosLoc; //, vColorLoc;
 };

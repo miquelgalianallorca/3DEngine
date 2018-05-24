@@ -70,7 +70,7 @@ Shader::Shader(const std::string& vertexShaderSource, const std::string& fragmen
 
 	// Get and store attribute vars of shaders
 	vPosLoc   = glGetAttribLocation(id, "vpos");
-	vColorLoc = glGetAttribLocation(id, "vcolor");
+	//vColorLoc = glGetAttribLocation(id, "vcolor");
 }
 
 Shader::~Shader()
@@ -94,11 +94,8 @@ void Shader::SetupAttribs() const
 	if (vPosLoc != -1)
 	{
 		glEnableVertexAttribArray(vPosLoc);
-
 		// Will change when more is added to Vertex
-		size_t offsetStride = 0;
-		//reinterpret_cast<const void*>(offsetof(Vertex, x))
-		glVertexAttribPointer(vPosLoc, 3, GL_FLOAT, false, sizeof(Vertex), &offsetStride);
+		glVertexAttribPointer(vPosLoc, 3, GL_FLOAT, false, sizeof(Vertex), nullptr);
 	}
 	//if (vColorLoc != -1)
 	//{
@@ -113,7 +110,7 @@ void Shader::SetupAttribs() const
 // Obtiene la localización de una variable uniform
 int Shader::GetLocation(const char* name) const
 {
-	return glGetAttribLocation(id, name);
+	return glGetUniformLocation(id, name);
 }
 
 // Da valor a una variable uniform
@@ -169,5 +166,5 @@ void Shader::SetMatrix(int loc, const glm::mat4& matrix)
 		return;
 	}
 	
-	glUniformMatrix4fv(loc, 16, false, value_ptr(matrix));
+	glUniformMatrix4fv(loc, 1, false, value_ptr(matrix));
 }

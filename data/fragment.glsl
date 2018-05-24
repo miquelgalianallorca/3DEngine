@@ -1,5 +1,5 @@
-varying vec3 fcolor;
+// FRAGMENT SHADER
 
 void main() {
-	gl_FragColor = vec4(fcolor, 1);
+	gl_FragColor = vec4(1, 1, 1, 1);
 }
