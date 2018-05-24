@@ -62,8 +62,8 @@ int main()
 	if (!Init()) return -1;
 	
 	// Load shaders
-	std::string vertexShaderSource   = readString("data/vertex.glsl");
-	std::string fragmentShaderSource = readString("data/fragment.glsl");
+	std::string vertexShaderSource   = readString("../data/vertex.glsl"); //remove ../ at class
+	std::string fragmentShaderSource = readString("../data/fragment.glsl");
 	ShaderPtr shader = Shader::Create(vertexShaderSource, fragmentShaderSource);
 	if (!shader)
 	{
@@ -75,14 +75,15 @@ int main()
 
 	// Load buffer with a triangle
 	std::vector<Vertex> vertices{
-		Vertex(-1, 0, -2),
-		Vertex( 0, 1, -2),
-		Vertex( 1, 0, -2)
+		Vertex(   0,  .5f, 0),
+		Vertex(-.5f, -.5f, 0),
+		Vertex( .5f, -.5f, 0)
 	};
 	std::vector<uint16_t> indexes { 0, 1, 2 };
 	Buffer buffer(vertices, indexes);
 	
 	float rotationSpeed = 32.f;
+    float currentAngle = 0.f;
 
 	// Main loop
 	double lastTime = glfwGetTime();
@@ -102,9 +103,11 @@ int main()
 		glClearColor(0, 0, 0, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
+        currentAngle += deltaTime * rotationSpeed;
+
 		// Calculate Model-View-Projection matrix
 		float fovy   = glm::radians(45.f);
-		float aspect = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
+		float aspect = (float)screenWidth / screenHeight;
 		float near   = 0.1f;
 		float far    = 100.f;
 		glm::mat4 projection = glm::perspective(fovy, aspect, near, far);
@@ -114,25 +117,21 @@ int main()
 		glm::vec3 up     = { 0.f, 1.f, 0.f };
 		glm::mat4 view = glm::lookAt(eye, center, up);
 		
-		glm::mat4 model = glm::translate(glm::mat4(1.f), glm::vec3(1.f)) *
-			glm::rotate(glm::mat4(1.f), 0.f, up) *
-			glm::scale(glm::mat4(1.f), glm::vec3(0.f));
-		model = glm::mat4(1);
-		glm::mat4 MVP = projection * view * model;
-
-		// Set MVP in shader
-		int mvpLocation = shader->GetLocation("MVP");
-		shader->SetMatrix(mvpLocation, MVP);
-		
 		// Draw triangles
 		for (size_t i = 0; i < 9; ++i)
 		{
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0)) * 
+                glm::rotate(glm::mat4(1.0f), glm::radians(currentAngle), glm::vec3(0, 1, 0)) * 
+                glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1));
+            glm::mat4 MVP = projection * view * model;
 
+            // Set MVP in shader
+            int mvpLocation = shader->GetLocation("MVP");
+            shader->SetMatrix(mvpLocation, MVP);
+
+            // Draw
+            buffer.Draw(*shader);
 		}
-
-		// Draw
-		shader->Use();
-		buffer.Draw(*shader);
 
 		// Refresh screen
 		glfwSwapBuffers(win);
