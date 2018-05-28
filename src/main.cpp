@@ -5,6 +5,7 @@
 #include "buffer.h"
 #include "common.h"
 #include "shader.h"
+#include "state.h"
 #include "utils.h"
 #include "vertex.h"
 
@@ -53,6 +54,17 @@ bool Init()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_SCISSOR_TEST);
 
+	// Load State's default shader
+	std::string vertexShaderSource = readString("data/vertex.glsl"); //remove ../ at class
+	std::string fragmentShaderSource = readString("data/fragment.glsl");
+	ShaderPtr shader = Shader::Create(vertexShaderSource, fragmentShaderSource);
+	if (!shader)
+	{
+		cout << "Error: Could not create shaders" << endl;
+		return false;
+	}
+	State::defaultShader = shader;
+
 	return true;
 }
 
@@ -62,9 +74,7 @@ int main()
 	if (!Init()) return -1;
 	
 	// Load shaders
-	std::string vertexShaderSource   = readString("../data/vertex.glsl"); //remove ../ at class
-	std::string fragmentShaderSource = readString("../data/fragment.glsl");
-	ShaderPtr shader = Shader::Create(vertexShaderSource, fragmentShaderSource);
+	ShaderPtr shader = State::defaultShader;
 	if (!shader)
 	{
 		cout << "Error: Could not create shaders" << endl;
