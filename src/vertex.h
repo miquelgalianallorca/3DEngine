@@ -4,6 +4,6 @@
 
 struct Vertex
 {
-	Vertex(float x, float y, float z);
+	Vertex(const glm::vec3& _pos) : pos(_pos) {}
 	glm::vec3 pos;
 };

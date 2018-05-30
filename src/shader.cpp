@@ -1,13 +1,17 @@
 #include "shader.h"
 #include "vertex.h"
-#include "../lib/glfw/glfw3.h"
 #include <iostream>
 
 using std::cout;
 using std::endl;
 
+std::string Shader::m_errorLog;
+
 ShaderPtr Shader::Create(const std::string& vertexShaderSource, const std::string& fragmentShaderSource)
 {
+	// Reset error message static var
+	m_errorLog = "";
+
 	// Shared pointer constructor (make_shared needs public constructor/destructor)
 	// with custom destructor lambda
 	std::shared_ptr<Shader> shaderPtr(new Shader(vertexShaderSource, fragmentShaderSource),
@@ -17,10 +21,12 @@ ShaderPtr Shader::Create(const std::string& vertexShaderSource, const std::strin
 	else return shaderPtr;
 }
 
-Shader::Shader(const std::string& vertexShaderSource, const std::string& fragmentShaderSource)
+Shader::Shader(const std::string& vertexShaderSource, const std::string& fragmentShaderSource) :
+	m_id(0)
 {
 	// Create vertex shader
 	int retCode;
+	char errorLog[1024];
 	const char* cVertexShaderSource = vertexShaderSource.c_str();
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &cVertexShaderSource, nullptr);
@@ -29,9 +35,8 @@ Shader::Shader(const std::string& vertexShaderSource, const std::string& fragmen
 	if (retCode == GL_FALSE)
 	{
 		glGetShaderInfoLog(vertexShader, sizeof(errorLog), nullptr, errorLog);
-		cout << "Error: Vertex shader could not be compiled:" << endl << errorLog << endl;
+		m_errorLog = errorLog;
 		glDeleteShader(vertexShader);
-		glfwTerminate();
 		return;
 	}
 
@@ -44,58 +49,54 @@ Shader::Shader(const std::string& vertexShaderSource, const std::string& fragmen
 	if (retCode == GL_FALSE)
 	{
 		glGetShaderInfoLog(fragmentShader, sizeof(errorLog), nullptr, errorLog);
-		cout << "Error: Fragment shader could not be compiled:" << endl << errorLog << endl;
+		m_errorLog = errorLog;
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
-		glfwTerminate();
 		return;
 	}
 
 	// Create and link program
-	id = glCreateProgram();
-	glAttachShader(id, vertexShader);
-	glAttachShader(id, fragmentShader);
-	glLinkProgram(id);
+	m_id = glCreateProgram();
+	glAttachShader(m_id, vertexShader);
+	glAttachShader(m_id, fragmentShader);
+	glLinkProgram(m_id);
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
-	glGetProgramiv(id, GL_LINK_STATUS, &retCode);
+	glGetProgramiv(m_id, GL_LINK_STATUS, &retCode);
 	if (retCode == GL_FALSE)
 	{
-		glGetProgramInfoLog(id, sizeof(errorLog), nullptr, errorLog);
-		cout << "Error: Program could not be linked:" << endl << errorLog << endl;
-		glDeleteProgram(id);
-		glfwTerminate();
+		glGetProgramInfoLog(m_id, sizeof(errorLog), nullptr, errorLog);
+		m_errorLog = errorLog;
+		glDeleteProgram(m_id);
 		return;
 	}
 
 	// Get and store attribute vars of shaders
-	vPosLoc   = glGetAttribLocation(id, "vpos");
+	m_vPosLoc   = glGetAttribLocation(m_id, "vpos");
 	//vColorLoc = glGetAttribLocation(id, "vcolor");
 }
 
 Shader::~Shader()
 {
 	// Release data in VRAM
-	glDeleteProgram(id);
-
-	//glDeleteBuffers(1, &vertexBuffer);
-	glfwTerminate();
+	if (m_id) glDeleteProgram(m_id);
 }
 
 // Activa el uso de este programa
 void Shader::Use() const
 {
-	glUseProgram(id);
+	glUseProgram(m_id);
 }
 
 // Activa la escritura de las variables attribute, y especifica su formato
 void Shader::SetupAttribs() const
 {
-	if (vPosLoc != -1)
+	if (m_vPosLoc != -1)
 	{
-		glEnableVertexAttribArray(vPosLoc);
+		glEnableVertexAttribArray(m_vPosLoc);
 		// Will change when more is added to Vertex
-		glVertexAttribPointer(vPosLoc, 3, GL_FLOAT, false, sizeof(Vertex), nullptr);
+		glVertexAttribPointer(m_vPosLoc, 3, GL_FLOAT, false, sizeof(Vertex),
+			reinterpret_cast<const void*>(offsetof(Vertex, pos)));
 	}
 	//if (vColorLoc != -1)
 	//{
@@ -108,9 +109,9 @@ void Shader::SetupAttribs() const
 }
 
 // Obtiene la localización de una variable uniform
-int Shader::GetLocation(const char* name) const
+int Shader::GetLocation(const std::string& name) const
 {
-	return glGetUniformLocation(id, name);
+	return glGetUniformLocation(m_id, name.c_str());
 }
 
 // Da valor a una variable uniform
@@ -132,7 +133,6 @@ void Shader::SetFloat(int loc, float val)
 		cout << "Invalid location in Shader::SetFloat" << endl;
 		return;
 	}
-
 	glUniform1f(loc, val);
 }
 
@@ -143,8 +143,7 @@ void Shader::SetVec3(int loc, const glm::vec3& vec)
 		cout << "Invalid location in Shader::SetVec3" << endl;
 		return;
 	}
-
-	glUniform3f(loc, vec.x, vec.y, vec.z);
+	glUniform3fv(loc, 1, glm::value_ptr(vec));
 }
 
 void Shader::SetVec4(int loc, const glm::vec4& vec)
@@ -154,8 +153,7 @@ void Shader::SetVec4(int loc, const glm::vec4& vec)
 		cout << "Invalid location in Shader::SetVec4" << endl;
 		return;
 	}
-
-	glUniform4f(loc, vec.x, vec.y, vec.z, vec.w);
+	glUniform4fv(loc, 1, glm::value_ptr(vec));
 }
 
 void Shader::SetMatrix(int loc, const glm::mat4& matrix)
@@ -165,6 +163,5 @@ void Shader::SetMatrix(int loc, const glm::mat4& matrix)
 		cout << "Invalid location in Shader::SetMatrix" << endl;
 		return;
 	}
-	
 	glUniformMatrix4fv(loc, 1, false, value_ptr(matrix));
 }
