@@ -55,10 +55,10 @@ bool Init()
 	glEnable(GL_SCISSOR_TEST);
 
 	// Load State's default shader
-	std::string vertexShaderSource = readString("data/vertex.glsl"); //remove ../ at class
-	std::string fragmentShaderSource = readString("data/fragment.glsl");
+	std::string vertexShaderSource = readString("../data/vertex.glsl"); //remove ../ at class
+	std::string fragmentShaderSource = readString("../data/fragment.glsl");
 	ShaderPtr shader = Shader::Create(vertexShaderSource, fragmentShaderSource);
-	if (!shader)
+	if (Shader::GetError().size() != 0)
 	{
 		cout << "Error: " << endl << Shader::GetError() << endl;
 		return false;

@@ -28,12 +28,22 @@ std::shared_ptr<Entity>& World::GetEntity(size_t index)
 	return entities.at(index);
 }
 
-void Update(float deltaTime)
+void World::Update(float deltaTime)
 {
-
+    for (auto entity : entities)
+    {
+        entity->Update(deltaTime);
+    }
 }
 
-void Draw()
+void World::Draw()
 {
-
+    for (auto camera : cameras)
+    {
+        camera->Prepare();
+        for (auto entity : entities)
+        {
+            entity->Draw();
+        }
+    }
 }
