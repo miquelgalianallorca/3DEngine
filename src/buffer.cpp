@@ -2,7 +2,6 @@
 #include "shader.h"
 #include "vertex.h"
 
-
 BufferPtr Buffer::Create(const std::vector<Vertex>& vertices, const std::vector<uint16_t>& indexes)
 {
 	// We could check in index and vertex arrays are correct

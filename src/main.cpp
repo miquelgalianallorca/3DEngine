@@ -48,7 +48,7 @@ int main()
         return -1;
     }
 
-    // Load shaders
+    // Load default shader
     ShaderPtr shader = Shader::Create(readString("../data/vertex.glsl"), readString("../data/fragment.glsl"));
     if (!shader)
     {
@@ -56,10 +56,8 @@ int main()
         cout << Shader::GetError() << endl;
         return -1;
     }	
-    shader->Use(); // delete this
     State::defaultShader = shader;
-    int mvpLoc = shader->GetLocation("MVP"); // delete this
-
+    
     // World
     World world;
     CameraPtr camera = Camera::Create();
@@ -75,11 +73,24 @@ int main()
     };
     std::vector<uint16_t> indexes { 0, 1, 2 };
     BufferPtr buffer = Buffer::Create(vertices, indexes);
-
+    
+    // Triangle mesh
     MeshPtr mesh = Mesh::Create();
     mesh->AddBuffer(buffer);
-    ModelPtr model = Model::Create(mesh);
-    world.AddEntity(model);
+
+    // Triangle models use the same mesh
+    std::vector<ModelPtr> triangles;
+    for (size_t i = 0; i < 9; ++i)
+    {
+        ModelPtr model = Model::Create(mesh);
+        int row = i / 3;
+        int col = i % 3;
+        model->SetPosition(glm::vec3(3 - 3 * row, 0, -3 * col));
+        
+        triangles.push_back(model);
+        world.AddEntity(model);
+    }
+    
 
     float rotationSpeed = 32.f;
     float currentAngle = 0.f;
@@ -97,9 +108,6 @@ int main()
         glfwGetWindowSize(win, &screenWidth, &screenHeight);
         camera->SetViewport(glm::ivec4(0, 0, screenWidth, screenHeight));
 
-        // Update logic
-        currentAngle += deltaTime * rotationSpeed;
-
         // Projection matrix
         float fovy   = glm::radians(45.f);
         float aspect = static_cast<float>(screenWidth) / screenHeight;
@@ -108,28 +116,16 @@ int main()
         glm::mat4 projection = glm::perspective(fovy, aspect, near, far);
         camera->SetProjection(projection);
 
+        // Update
         world.Update(deltaTime);
+        currentAngle += deltaTime * rotationSpeed;
+        for (auto triangle : triangles)
+        {
+            triangle->SetRotation(glm::vec3(0.f, glm::radians(currentAngle), 0.f));
+        }
+        
+        // Draw
         world.Draw();
-
-        // Draw triangles
-        //for (size_t i = 0; i < 9; ++i)
-        //{
-        //    // Positioning
-        //    int row = i / 3;
-        //    int col = i % 3;
-        //    glm::vec3 translation(3 - 3 * row, 0, -3 * col);
-
-        //    // MVP matrix
-        //    glm::mat4 model = glm::translate(glm::mat4(), translation) * 
-        //        glm::rotate(glm::mat4(), glm::radians(currentAngle), glm::vec3(0, 1, 0)) * 
-        //        glm::scale(glm::mat4(), glm::vec3(1, 1, 1));
-
-        //    glm::mat4 MVP = projection * view * model;
-        //    Shader::SetMatrix(mvpLoc, MVP);
-
-        //    // Draw
-        //    buffer->Draw(*shader);
-        //}
 
         // Refresh screen
         glfwSwapBuffers(win);

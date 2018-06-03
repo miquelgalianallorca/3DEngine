@@ -12,10 +12,10 @@ void Camera::Prepare()
 	// Set projection matrix
 	State::projectionMatrix = projection;
 
-	// Set view matrix
+	// Set view matrix:
+    // Rotating and translating the camera is the same as translating and rotating the vertexs
+    // with the opposite direction and angle
     glm::mat4 translationMat = glm::translate(glm::mat4(1.0f), GetPosition() * -1.f);
-	
-	// ??
 	glm::mat4 rotateX = glm::rotate(glm::mat4(1.0f), GetRotation().x * -1.f, glm::vec3(1, 0, 0));
 	glm::mat4 rotateY = glm::rotate(glm::mat4(1.0f), GetRotation().y * -1.f, glm::vec3(0, 1, 0));
 	glm::mat4 rotateZ = glm::rotate(glm::mat4(1.0f), GetRotation().z * -1.f, glm::vec3(0, 0, 1));
