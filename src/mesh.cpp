@@ -3,6 +3,12 @@
 #include "shader.h"
 #include "state.h"
 
+MeshPtr Mesh::Create()
+{
+    std::shared_ptr<Mesh> mesh(new Mesh(), [](Mesh* p) { delete p; });
+    return mesh;
+}
+
 void Mesh::AddBuffer(const std::shared_ptr<Buffer>& buffer,
 	const std::shared_ptr<Shader>& shader)
 {
@@ -34,7 +40,7 @@ void Mesh::Draw()
 		pair.second->Use();
 		
 		// Calculate MVP matrix
-		glm::mat4 mvp = State::modelMatrix * State::viewMatrix * State::projectionMatrix;
+		glm::mat4 mvp = State::projectionMatrix * State::viewMatrix * State::modelMatrix;
 		int loc = pair.second->GetLocation("MVP");
 		pair.second->SetMatrix(loc, mvp);
 

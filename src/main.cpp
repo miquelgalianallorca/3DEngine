@@ -2,12 +2,16 @@
 //#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 #endif
 
-#include "buffer.h"
 #include "common.h"
+#include "buffer.h"
+#include "camera.h"
+#include "mesh.h"
+#include "model.h"
 #include "shader.h"
 #include "state.h"
 #include "utils.h"
 #include "vertex.h"
+#include "world.h"
 
 #include "../lib/glfw/glfw3.h"
 #include <fstream>
@@ -52,9 +56,16 @@ int main()
         cout << Shader::GetError() << endl;
         return -1;
     }	
-    shader->Use();
-    //State::defaultShader = shader;
-    int mvpLoc = shader->GetLocation("MVP");
+    shader->Use(); // delete this
+    State::defaultShader = shader;
+    int mvpLoc = shader->GetLocation("MVP"); // delete this
+
+    // World
+    World world;
+    CameraPtr camera = Camera::Create();
+    world.AddEntity(camera);
+    camera->SetPosition(glm::vec3(0.f, 0.f, 6.f));
+    camera->SetClearColor(glm::vec3(0.1f, 0.1f, 0.1f));
 
     // Load buffer with a triangle
     std::vector<Vertex> vertices{
@@ -65,14 +76,13 @@ int main()
     std::vector<uint16_t> indexes { 0, 1, 2 };
     BufferPtr buffer = Buffer::Create(vertices, indexes);
 
+    MeshPtr mesh = Mesh::Create();
+    mesh->AddBuffer(buffer);
+    ModelPtr model = Model::Create(mesh);
+    world.AddEntity(model);
+
     float rotationSpeed = 32.f;
     float currentAngle = 0.f;
-
-    // Matrixes for MVP that don't change
-    glm::vec3 eye    = { 0.f, 0.f, 6.f };
-    glm::vec3 center = { 0.f, 0.f, 0.f };
-    glm::vec3 up     = { 0.f, 1.f, 0.f };
-    glm::mat4 view = glm::lookAt(eye, center, up);
 
     // Main loop
     double lastTime = glfwGetTime();
@@ -85,42 +95,41 @@ int main()
         // Setup viewport
         int screenWidth, screenHeight;
         glfwGetWindowSize(win, &screenWidth, &screenHeight);
-        glViewport(0, 0, screenWidth, screenHeight);
-        glScissor (0, 0, screenWidth, screenHeight);
-
-        // Clear screen
-        glClearColor(.1, .1, .1, 1);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        camera->SetViewport(glm::ivec4(0, 0, screenWidth, screenHeight));
 
         // Update logic
         currentAngle += deltaTime * rotationSpeed;
 
-        // Calculate Model-View-Projection matrix (MVP)
+        // Projection matrix
         float fovy   = glm::radians(45.f);
-        float aspect = (float)screenWidth / screenHeight;
+        float aspect = static_cast<float>(screenWidth) / screenHeight;
         float near   = 0.1f;
         float far    = 100.f;
         glm::mat4 projection = glm::perspective(fovy, aspect, near, far);
+        camera->SetProjection(projection);
+
+        world.Update(deltaTime);
+        world.Draw();
 
         // Draw triangles
-        for (size_t i = 0; i < 9; ++i)
-        {
-            // Positioning
-            int row = i / 3;
-            int col = i % 3;
-            glm::vec3 translation(3 - 3 * row, 0, -3 * col);
+        //for (size_t i = 0; i < 9; ++i)
+        //{
+        //    // Positioning
+        //    int row = i / 3;
+        //    int col = i % 3;
+        //    glm::vec3 translation(3 - 3 * row, 0, -3 * col);
 
-            // MVP matrix
-            glm::mat4 model = glm::translate(glm::mat4(), translation) * 
-                glm::rotate(glm::mat4(), glm::radians(currentAngle), glm::vec3(0, 1, 0)) * 
-                glm::scale(glm::mat4(), glm::vec3(1, 1, 1));
+        //    // MVP matrix
+        //    glm::mat4 model = glm::translate(glm::mat4(), translation) * 
+        //        glm::rotate(glm::mat4(), glm::radians(currentAngle), glm::vec3(0, 1, 0)) * 
+        //        glm::scale(glm::mat4(), glm::vec3(1, 1, 1));
 
-            glm::mat4 MVP = projection * view * model;
-            Shader::SetMatrix(mvpLoc, MVP);
+        //    glm::mat4 MVP = projection * view * model;
+        //    Shader::SetMatrix(mvpLoc, MVP);
 
-            // Draw
-            buffer->Draw(*shader);
-        }
+        //    // Draw
+        //    buffer->Draw(*shader);
+        //}
 
         // Refresh screen
         glfwSwapBuffers(win);

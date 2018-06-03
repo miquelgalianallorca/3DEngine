@@ -5,9 +5,6 @@
 class Entity
 {
 public:
-	Entity() {}
-	virtual ~Entity() {}
-
 	const glm::vec3& GetPosition() const { return position; }
 	const glm::vec3& GetRotation() const { return rotation;	} // puede ser quat
 	const glm::vec3& GetScale()    const { return scale;    }
@@ -20,6 +17,10 @@ public:
 
 	virtual void Update(float deltaTime) {}
 	virtual void Draw() {}
+
+protected:
+    Entity() {}
+    virtual ~Entity() {}
 
 private:
 	glm::vec3 position;
