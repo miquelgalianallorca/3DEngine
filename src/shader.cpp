@@ -72,8 +72,8 @@ Shader::Shader(const std::string& vertexShaderSource, const std::string& fragmen
 	}
 
 	// Get and store attribute vars of shaders
-	m_vPosLoc   = glGetAttribLocation(m_id, "vpos");
-	//vColorLoc = glGetAttribLocation(id, "vcolor");
+	m_vPosLoc = glGetAttribLocation(m_id, "vpos");
+	m_vTexLoc = glGetAttribLocation(m_id, "vtex");
 }
 
 Shader::~Shader()
@@ -91,30 +91,29 @@ void Shader::Use() const
 // Activa la escritura de las variables attribute, y especifica su formato
 void Shader::SetupAttribs() const
 {
+    // Vertex location
 	if (m_vPosLoc != -1)
 	{
 		glEnableVertexAttribArray(m_vPosLoc);
-		// Will change when more is added to Vertex
 		glVertexAttribPointer(m_vPosLoc, 3, GL_FLOAT, false, sizeof(Vertex),
 			reinterpret_cast<const void*>(offsetof(Vertex, pos)));
 	}
-	//if (vColorLoc != -1)
-	//{
-	//	glEnableVertexAttribArray(vColorLoc);
-	//	
-	//	size_t offsetStride = 0;
-	//	//reinterpret_cast<const void*>(offsetof(Vertex, r))
-	//	glVertexAttribPointer(vColorLoc, 3, GL_FLOAT, false, sizeof(Vertex), &offsetStride);
-	//}
+    // Vertex texture coord.
+    if (m_vTexLoc != -1)
+    {
+        glEnableVertexAttribArray(m_vTexLoc);
+        glVertexAttribPointer(m_vTexLoc, 2, GL_FLOAT, false, sizeof(Vertex),
+            reinterpret_cast<const void*>(offsetof(Vertex, tex)));
+    }
 }
 
-// Obtiene la localización de una variable uniform
+// Get location of uniform var
 int Shader::GetLocation(const std::string& name) const
 {
 	return glGetUniformLocation(m_id, name.c_str());
 }
 
-// Da valor a una variable uniform
+// Set uniform var
 void Shader::SetInt(int loc, int val)
 {
 	if (loc == -1)

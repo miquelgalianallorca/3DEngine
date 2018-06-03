@@ -43,5 +43,7 @@ private:
 	static std::string m_errorLog;
 
 	uint32_t vertexShader, fragmentShader;
-	int32_t m_vPosLoc; //, vColorLoc;
+    
+    // Attribute vars location
+	int32_t m_vPosLoc, m_vTexLoc;
 };
