@@ -3,7 +3,6 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <vector>
 
 inline std::string readString(const std::string& filename)
 {
@@ -12,3 +11,5 @@ inline std::string readString(const std::string& filename)
     sstream << istream.rdbuf();
     return sstream.str();
 }
+
+bool Init();
