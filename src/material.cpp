@@ -26,5 +26,6 @@ void Material::Prepare()
     m_shader->SetInt(m_shader->GetLocation("texSampler"), 0);
 
     // Bind texture
-    if (m_texture) m_texture->Bind();
+    if (m_texture)
+        m_texture->Bind();
 }

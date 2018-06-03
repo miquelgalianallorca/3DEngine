@@ -1,5 +1,6 @@
 #include "mesh.h"
 #include "buffer.h"
+#include "material.h"
 #include "shader.h"
 #include "state.h"
 
@@ -12,39 +13,63 @@ MeshPtr Mesh::Create()
 void Mesh::AddBuffer(const std::shared_ptr<Buffer>& buffer,
 	const std::shared_ptr<Shader>& shader)
 {
-	if (!shader) pairs.push_back(std::make_pair(buffer, State::defaultShader));
-	else         pairs.push_back(std::make_pair(buffer, shader));
+	if (!shader) m_bufferShaderPairs.push_back(std::make_pair(buffer, State::defaultShader));
+	else         m_bufferShaderPairs.push_back(std::make_pair(buffer, shader));
+}
+
+void Mesh::AddBuffer(const std::shared_ptr<Buffer>& buffer, const Material& material)
+{
+    // No storing shaders directly, only a material per buffer
+    m_bufferMatPairs.push_back(std::make_pair(buffer, material));
 }
 
 size_t Mesh::GetNumBuffers() const
 {
-	return pairs.size();
+	return m_bufferShaderPairs.size();
 }
 
 const std::shared_ptr<Buffer>& Mesh::GetBuffer(size_t index) const
 {
-	return pairs.at(index).first;
+	return m_bufferShaderPairs.at(index).first;
 }
 
 std::shared_ptr<Buffer>& Mesh::GetBuffer(size_t index)
 {
-	return pairs.at(index).first;
+	return m_bufferShaderPairs.at(index).first;
+}
+
+const Material& Mesh::GetMaterial(size_t index) const
+{
+    return m_bufferMatPairs.at(index).second;
+}
+
+Material& Mesh::GetMaterial(size_t index)
+{
+    return m_bufferMatPairs.at(index).second;
 }
 
 void Mesh::Draw()
 {
 	// Draw all buffers with their shader
-	for (auto pair : pairs)
-	{
-		// Activate shader of each buffer
-		pair.second->Use();
-		
-		// Calculate MVP matrix
-		glm::mat4 mvp = State::projectionMatrix * State::viewMatrix * State::modelMatrix;
-		int loc = pair.second->GetLocation("MVP");
-		pair.second->SetMatrix(loc, mvp);
+	//for (auto pair : m_bufferShaderPairs)
+	//{
+	//	// Activate shader of each buffer
+	//	pair.second->Use();
+	//	
+	//	// Calculate MVP matrix
+	//	glm::mat4 mvp = State::projectionMatrix * State::viewMatrix * State::modelMatrix;
+	//	int loc = pair.second->GetLocation("MVP");
+	//	pair.second->SetMatrix(loc, mvp);
 
-		// Draw buffer
-		pair.first->Draw(*pair.second);
-	}
+	//	// Draw buffer
+	//	pair.first->Draw(*pair.second);
+	//}
+
+    for (auto pair : m_bufferMatPairs)
+    {
+        // Prepare material
+        pair.second.Prepare();
+        // Draw buffer with material's shader
+        pair.first->Draw(*pair.second.GetShader());
+    }
 }

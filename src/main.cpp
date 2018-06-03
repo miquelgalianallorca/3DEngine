@@ -6,9 +6,11 @@
 #include "buffer.h"
 #include "camera.h"
 #include "mesh.h"
+#include "material.h"
 #include "model.h"
 #include "shader.h"
 #include "state.h"
+#include "texture.h"
 #include "utils.h"
 #include "vertex.h"
 #include "world.h"
@@ -62,24 +64,31 @@ int main()
     World world;
     CameraPtr camera = Camera::Create();
     world.AddEntity(camera);
-    camera->SetPosition(glm::vec3(0.f, 0.f, 6.f));
+    camera->SetPosition(glm::vec3(0.f, 1.f, 3.f));
+    camera->SetRotation(glm::vec3(-20.f, 0.f, 0.f));
     camera->SetClearColor(glm::vec3(0.1f, 0.1f, 0.1f));
 
-    // Load buffer with a triangle
+    // Load buffer with a square
     std::vector<Vertex> vertices{
-        Vertex(glm::vec3(   0,  .5f, 0)),
+        Vertex(glm::vec3(-.5f,  .5f, 0)),
         Vertex(glm::vec3(-.5f, -.5f, 0)),
-        Vertex(glm::vec3( .5f, -.5f, 0))
+        Vertex(glm::vec3( .5f, -.5f, 0)),
+        Vertex(glm::vec3( .5f,  .5f, 0))
     };
     std::vector<uint16_t> indexes { 0, 1, 2 };
     BufferPtr buffer = Buffer::Create(vertices, indexes);
     
-    // Triangle mesh
+    // Load textures
+    TexturePtr textureFront = Texture::Load("../data/front.png");
+    TexturePtr textureTop   = Texture::Load("../data/top.png");
+    Material mat(textureFront);
+    // Square mesh
     MeshPtr mesh = Mesh::Create();
-    mesh->AddBuffer(buffer);
+    mesh->AddBuffer(buffer, mat);
+    
 
     // Triangle models use the same mesh
-    std::vector<ModelPtr> triangles;
+    /*std::vector<ModelPtr> squares;
     for (size_t i = 0; i < 9; ++i)
     {
         ModelPtr model = Model::Create(mesh);
@@ -87,13 +96,14 @@ int main()
         int col = i % 3;
         model->SetPosition(glm::vec3(3 - 3 * row, 0, -3 * col));
         
-        triangles.push_back(model);
+        squares.push_back(model);
         world.AddEntity(model);
-    }
-    
+    }*/
+    ModelPtr model = Model::Create(mesh);
+    world.AddEntity(model);
 
-    float rotationSpeed = 32.f;
-    float currentAngle = 0.f;
+    // float rotationSpeed = 32.f;
+    // float currentAngle = 0.f;
 
     // Main loop
     double lastTime = glfwGetTime();
@@ -118,11 +128,11 @@ int main()
 
         // Update
         world.Update(deltaTime);
-        currentAngle += deltaTime * rotationSpeed;
-        for (auto triangle : triangles)
+        //currentAngle += deltaTime * rotationSpeed;
+        /*for (auto triangle : squares)
         {
             triangle->SetRotation(glm::vec3(0.f, glm::radians(currentAngle), 0.f));
-        }
+        }*/
         
         // Draw
         world.Draw();
