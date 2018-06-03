@@ -90,7 +90,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../lib/glew</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../lib/stb;../lib/glew</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -146,6 +146,7 @@
     <ClInclude Include="..\src\model.h" />
     <ClInclude Include="..\src\shader.h" />
     <ClInclude Include="..\src\state.h" />
+    <ClInclude Include="..\src\texture.h" />
     <ClInclude Include="..\src\utils.h" />
     <ClInclude Include="..\src\vertex.h" />
     <ClInclude Include="..\src\world.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="..\src\model.cpp" />
     <ClCompile Include="..\src\shader.cpp" />
     <ClCompile Include="..\src\state.cpp" />
+    <ClCompile Include="..\src\texture.cpp" />
     <ClCompile Include="..\src\utils.cpp" />
     <ClCompile Include="..\src\vertex.cpp" />
     <ClCompile Include="..\src\world.cpp" />

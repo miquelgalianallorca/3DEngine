@@ -6,4 +6,5 @@ struct Vertex
 {
 	Vertex(const glm::vec3& _pos) : pos(_pos) {}
 	glm::vec3 pos;
+    glm::vec2 tex;
 };
