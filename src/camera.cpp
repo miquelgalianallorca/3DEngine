@@ -19,7 +19,7 @@ void Camera::Prepare()
 	glm::mat4 rotateX = glm::rotate(glm::mat4(1.0f), GetRotation().x * -1.f, glm::vec3(1, 0, 0));
 	glm::mat4 rotateY = glm::rotate(glm::mat4(1.0f), GetRotation().y * -1.f, glm::vec3(0, 1, 0));
 	glm::mat4 rotateZ = glm::rotate(glm::mat4(1.0f), GetRotation().z * -1.f, glm::vec3(0, 0, 1));
-	glm::mat4 rotationMat = rotateX * rotateY * rotateZ;
+	glm::mat4 rotationMat = rotateZ * rotateY * rotateX;
     
 	State::viewMatrix = rotationMat * translationMat;
 	

@@ -70,27 +70,49 @@ int main()
 
     // Load buffer with a square
     std::vector<Vertex> vertexs{
-		Vertex(glm::vec3( .5f,  .5f, 0)),
-        Vertex(glm::vec3(-.5f,  .5f, 0)),
-        Vertex(glm::vec3(-.5f, -.5f, 0)),
-        Vertex(glm::vec3( .5f, -.5f, 0))
+		// Front
+		Vertex(glm::vec3( .5f,  .5f, -.5f), glm::vec2(1.f, 1.f)), // 0
+        Vertex(glm::vec3(-.5f,  .5f, -.5f), glm::vec2(0.f, 1.f)), // 1
+        Vertex(glm::vec3(-.5f, -.5f, -.5f), glm::vec2(0.f, 0.f)), // 2
+        Vertex(glm::vec3( .5f, -.5f, -.5f), glm::vec2(1.f, 0.f)), // 3
+		// Right
+		Vertex(glm::vec3( .5f,  .5f,  .5f), glm::vec2(1.f, 1.f)), // 4
+		Vertex(glm::vec3( .5f,  .5f, -.5f), glm::vec2(0.f, 1.f)), // 5
+		Vertex(glm::vec3( .5f, -.5f, -.5f), glm::vec2(0.f, 0.f)), // 6
+		Vertex(glm::vec3( .5f, -.5f,  .5f), glm::vec2(1.f, 0.f)), // 7
+		// Back
+		Vertex(glm::vec3( .5f,  .5f,  .5f), glm::vec2(0.f, 1.f)), // 8
+		Vertex(glm::vec3(-.5f,  .5f,  .5f), glm::vec2(1.f, 1.f)), // 9
+		Vertex(glm::vec3(-.5f, -.5f,  .5f), glm::vec2(1.f, 0.f)), // 10
+		Vertex(glm::vec3( .5f, -.5f,  .5f), glm::vec2(0.f, 0.f)), // 11
+		// Left
+		Vertex(glm::vec3(-.5f,  .5f,  .5f), glm::vec2(0.f, 1.f)), // 12
+		Vertex(glm::vec3(-.5f,  .5f, -.5f), glm::vec2(1.f, 1.f)), // 13
+		Vertex(glm::vec3(-.5f, -.5f, -.5f), glm::vec2(1.f, 0.f)), // 14
+		Vertex(glm::vec3(-.5f, -.5f,  .5f), glm::vec2(0.f, 0.f))  // 15
     };
-	vertexs[0].tex = glm::vec2(1.f, 1.f);
-	vertexs[1].tex = glm::vec2(0.f, 1.f);
-	vertexs[2].tex = glm::vec2(0.f, 0.f);
-	vertexs[3].tex = glm::vec2(1.f, 0.f);
-
-    std::vector<uint16_t> indexes { 0, 1, 2, 0, 2, 3 };
+	
+    std::vector<uint16_t> indexes {
+		0, 1, 2,
+		0, 2, 3,
+		4, 5, 6,
+		4, 6, 7,
+		8, 9, 10,
+		8, 10, 11,
+		12, 13, 14,
+		12, 14, 15
+	};
     BufferPtr buffer = Buffer::Create(vertexs, indexes);
     
     // Load textures
     TexturePtr textureFront = Texture::Load("data/front.png");
     TexturePtr textureTop   = Texture::Load("data/top.png");
-    Material mat(textureFront);
+    Material matFront(textureFront);
+	Material matTop(textureTop);
     
 	// Square mesh
     MeshPtr mesh = Mesh::Create();
-    mesh->AddBuffer(buffer, mat);
+    mesh->AddBuffer(buffer, matFront);
     ModelPtr model = Model::Create(mesh);
     world.AddEntity(model);
 

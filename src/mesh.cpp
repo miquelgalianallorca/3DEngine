@@ -50,21 +50,6 @@ Material& Mesh::GetMaterial(size_t index)
 
 void Mesh::Draw()
 {
-	// Draw all buffers with their shader
-	//for (auto pair : m_bufferShaderPairs)
-	//{
-	//	// Activate shader of each buffer
-	//	pair.second->Use();
-	//	
-	//	// Calculate MVP matrix
-	//	glm::mat4 mvp = State::projectionMatrix * State::viewMatrix * State::modelMatrix;
-	//	int loc = pair.second->GetLocation("MVP");
-	//	pair.second->SetMatrix(loc, mvp);
-
-	//	// Draw buffer
-	//	pair.first->Draw(*pair.second);
-	//}
-
     for (auto pair : m_bufferMatPairs)
     {
         // Prepare material
