@@ -68,8 +68,8 @@ int main()
     camera->SetRotation(glm::vec3(glm::radians(-20.f), 0.f, 0.f));
     camera->SetClearColor(glm::vec3(0.1f, 0.1f, 0.1f));
 
-    // Load buffer with a square
-    std::vector<Vertex> vertexs{
+    // Vertex buffer
+    std::vector<Vertex> vertexsFront{
 		// Front
 		Vertex(glm::vec3( .5f,  .5f, -.5f), glm::vec2(1.f, 1.f)), // 0
         Vertex(glm::vec3(-.5f,  .5f, -.5f), glm::vec2(0.f, 1.f)), // 1
@@ -91,8 +91,7 @@ int main()
 		Vertex(glm::vec3(-.5f, -.5f, -.5f), glm::vec2(1.f, 0.f)), // 14
 		Vertex(glm::vec3(-.5f, -.5f,  .5f), glm::vec2(0.f, 0.f))  // 15
     };
-	
-    std::vector<uint16_t> indexes {
+    std::vector<uint16_t> indexsFront {
 		0, 1, 2,
 		0, 2, 3,
 		4, 5, 6,
@@ -102,7 +101,27 @@ int main()
 		12, 13, 14,
 		12, 14, 15
 	};
-    BufferPtr buffer = Buffer::Create(vertexs, indexes);
+	
+	std::vector<Vertex> vertexsTop{
+		// Top
+		Vertex(glm::vec3( .5f,  .5f,  .5f), glm::vec2(1.f, 1.f)), // 0
+		Vertex(glm::vec3(-.5f,  .5f,  .5f), glm::vec2(0.f, 1.f)), // 1
+		Vertex(glm::vec3(-.5f,  .5f, -.5f), glm::vec2(0.f, 0.f)), // 2
+		Vertex(glm::vec3( .5f,  .5f, -.5f), glm::vec2(1.f, 0.f)), // 3
+		// Bottom
+		Vertex(glm::vec3( .5f, -.5f,  .5f), glm::vec2(1.f, 1.f)), // 4
+		Vertex(glm::vec3(-.5f, -.5f,  .5f), glm::vec2(0.f, 1.f)), // 5
+		Vertex(glm::vec3(-.5f, -.5f, -.5f), glm::vec2(0.f, 0.f)), // 6
+		Vertex(glm::vec3( .5f, -.5f, -.5f), glm::vec2(1.f, 0.f))  // 7
+	};
+	std::vector<uint16_t> indexsTop {
+		0, 1, 2,
+		0, 2, 3,
+		4, 5, 6,
+		4, 6, 7
+	};
+    BufferPtr bufferFront = Buffer::Create(vertexsFront, indexsFront);
+	BufferPtr bufferTop   = Buffer::Create(vertexsTop,   indexsTop);
     
     // Load textures
     TexturePtr textureFront = Texture::Load("data/front.png");
@@ -112,7 +131,8 @@ int main()
     
 	// Square mesh
     MeshPtr mesh = Mesh::Create();
-    mesh->AddBuffer(buffer, matFront);
+    mesh->AddBuffer(bufferFront, matFront);
+	mesh->AddBuffer(bufferTop, matTop);
     ModelPtr model = Model::Create(mesh);
     world.AddEntity(model);
 
