@@ -5,7 +5,7 @@
 #include <vector>
 
 class Buffer;
-class Material;
+//class Material;
 class Mesh;
 class Shader;
 

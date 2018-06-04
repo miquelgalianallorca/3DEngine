@@ -49,7 +49,7 @@ Texture::Texture(const char* filename) :
 Texture::~Texture()
 {
     // Release from VRAM
-    // ...
+	glDeleteTextures(1, &m_id);
 }
 
 void Texture::Bind() const

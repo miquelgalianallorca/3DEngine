@@ -51,7 +51,7 @@ int main()
     }
 
     // Load default shader
-    ShaderPtr shader = Shader::Create(readString("../data/vertex.glsl"), readString("../data/fragment.glsl"));
+    ShaderPtr shader = Shader::Create(readString("data/vertex.glsl"), readString("data/fragment.glsl"));
     if (!shader)
     {
         cout << "Error: Could not create shaders" << endl;
@@ -65,45 +65,37 @@ int main()
     CameraPtr camera = Camera::Create();
     world.AddEntity(camera);
     camera->SetPosition(glm::vec3(0.f, 1.f, 3.f));
-    camera->SetRotation(glm::vec3(-20.f, 0.f, 0.f));
+    camera->SetRotation(glm::vec3(glm::radians(-20.f), 0.f, 0.f));
     camera->SetClearColor(glm::vec3(0.1f, 0.1f, 0.1f));
 
     // Load buffer with a square
-    std::vector<Vertex> vertices{
+    std::vector<Vertex> vertexs{
+		Vertex(glm::vec3( .5f,  .5f, 0)),
         Vertex(glm::vec3(-.5f,  .5f, 0)),
         Vertex(glm::vec3(-.5f, -.5f, 0)),
-        Vertex(glm::vec3( .5f, -.5f, 0)),
-        Vertex(glm::vec3( .5f,  .5f, 0))
+        Vertex(glm::vec3( .5f, -.5f, 0))
     };
-    std::vector<uint16_t> indexes { 0, 1, 2 };
-    BufferPtr buffer = Buffer::Create(vertices, indexes);
+	vertexs[0].tex = glm::vec2(1.f, 1.f);
+	vertexs[1].tex = glm::vec2(0.f, 1.f);
+	vertexs[2].tex = glm::vec2(0.f, 0.f);
+	vertexs[3].tex = glm::vec2(1.f, 0.f);
+
+    std::vector<uint16_t> indexes { 0, 1, 2, 0, 2, 3 };
+    BufferPtr buffer = Buffer::Create(vertexs, indexes);
     
     // Load textures
-    TexturePtr textureFront = Texture::Load("../data/front.png");
-    TexturePtr textureTop   = Texture::Load("../data/top.png");
+    TexturePtr textureFront = Texture::Load("data/front.png");
+    TexturePtr textureTop   = Texture::Load("data/top.png");
     Material mat(textureFront);
-    // Square mesh
+    
+	// Square mesh
     MeshPtr mesh = Mesh::Create();
     mesh->AddBuffer(buffer, mat);
-    
-
-    // Triangle models use the same mesh
-    /*std::vector<ModelPtr> squares;
-    for (size_t i = 0; i < 9; ++i)
-    {
-        ModelPtr model = Model::Create(mesh);
-        int row = i / 3;
-        int col = i % 3;
-        model->SetPosition(glm::vec3(3 - 3 * row, 0, -3 * col));
-        
-        squares.push_back(model);
-        world.AddEntity(model);
-    }*/
     ModelPtr model = Model::Create(mesh);
     world.AddEntity(model);
 
-    // float rotationSpeed = 32.f;
-    // float currentAngle = 0.f;
+    float rotationSpeed = 32.f;
+    float currentAngle = 0.f;
 
     // Main loop
     double lastTime = glfwGetTime();
@@ -128,11 +120,8 @@ int main()
 
         // Update
         world.Update(deltaTime);
-        //currentAngle += deltaTime * rotationSpeed;
-        /*for (auto triangle : squares)
-        {
-            triangle->SetRotation(glm::vec3(0.f, glm::radians(currentAngle), 0.f));
-        }*/
+        currentAngle += deltaTime * rotationSpeed;        
+		model->SetRotation(glm::vec3(0.f, glm::radians(currentAngle), 0.f));        
         
         // Draw
         world.Draw();
