@@ -2,6 +2,7 @@
 #include "shader.h"
 #include "state.h"
 #include "texture.h"
+#include <iostream>
 
 Material::Material(const std::shared_ptr<Texture>& tex, const std::shared_ptr<Shader>& shader)
 {
@@ -20,8 +21,10 @@ void Material::Prepare()
     glm::mat4 mvp = State::projectionMatrix * State::viewMatrix * State::modelMatrix;
     m_shader->SetMatrix(m_shader->GetLocation("MVP"), mvp);
     
-    if (m_texture) m_shader->SetInt(m_shader->GetLocation("hasTexture"), 1);
-    else           m_shader->SetInt(m_shader->GetLocation("hasTexture"), 0);
+    if (m_texture)
+		m_shader->SetInt(m_shader->GetLocation("hasTexture"), 1);
+    else
+		m_shader->SetInt(m_shader->GetLocation("hasTexture"), 0);
     
     m_shader->SetInt(m_shader->GetLocation("texSampler"), 0);
 

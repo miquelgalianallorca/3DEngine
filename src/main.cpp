@@ -62,13 +62,14 @@ int main()
     
     // World
     World world;
+	// Camera
     CameraPtr camera = Camera::Create();
-    world.AddEntity(camera);
     camera->SetPosition(glm::vec3(0.f, 1.f, 3.f));
     camera->SetRotation(glm::vec3(glm::radians(-20.f), 0.f, 0.f));
-    camera->SetClearColor(glm::vec3(0.1f, 0.1f, 0.1f));
+    camera->SetClearColor(glm::vec3(1.f, 1.f, 1.f));
+	world.AddEntity(camera);
 
-    // Vertex buffer
+    // Vertex buffer objects
     std::vector<Vertex> vertexsFront{
 		// Front
 		Vertex(glm::vec3( .5f,  .5f, -.5f), glm::vec2(1.f, 1.f)), // 0
@@ -102,7 +103,7 @@ int main()
 		12, 14, 15
 	};
 	
-	std::vector<Vertex> vertexsTop{
+	std::vector<Vertex> vertexsTop {
 		// Top
 		Vertex(glm::vec3( .5f,  .5f,  .5f), glm::vec2(1.f, 1.f)), // 0
 		Vertex(glm::vec3(-.5f,  .5f,  .5f), glm::vec2(0.f, 1.f)), // 1
@@ -120,7 +121,8 @@ int main()
 		4, 5, 6,
 		4, 6, 7
 	};
-    BufferPtr bufferFront = Buffer::Create(vertexsFront, indexsFront);
+    
+	BufferPtr bufferFront = Buffer::Create(vertexsFront, indexsFront);
 	BufferPtr bufferTop   = Buffer::Create(vertexsTop,   indexsTop);
     
     // Load textures
@@ -129,15 +131,15 @@ int main()
     Material matFront(textureFront);
 	Material matTop(textureTop);
     
-	// Square mesh
+	// Cube mesh
     MeshPtr mesh = Mesh::Create();
     mesh->AddBuffer(bufferFront, matFront);
 	mesh->AddBuffer(bufferTop, matTop);
     ModelPtr model = Model::Create(mesh);
     world.AddEntity(model);
 
-    float rotationSpeed = 32.f;
-    float currentAngle = 0.f;
+    float rotationSpeed = 60.f;
+    float currentAngle  =  0.f;
 
     // Main loop
     double lastTime = glfwGetTime();
