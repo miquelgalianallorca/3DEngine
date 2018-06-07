@@ -15,7 +15,7 @@ public:
 	const glm::vec3&  GetClearColor() const { return clearColor; }
 	
 	void SetProjection(const glm::mat4& proj)  { projection = proj;  }
-	void SetViewport(const glm::ivec4& vp)     { viewport = vp;      }
+	void SetViewport  (const glm::ivec4& vp)   { viewport = vp;      }
 	void SetClearColor(const glm::vec3& color) { clearColor = color; }
 
 	void Prepare();

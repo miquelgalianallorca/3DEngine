@@ -44,5 +44,5 @@ void Buffer::Draw(const Shader& shader) const
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBufferId);
 
 	shader.SetupAttribs();
-	glDrawElements(GL_TRIANGLES, m_indexLength, GL_UNSIGNED_SHORT, nullptr);
+	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_indexLength), GL_UNSIGNED_SHORT, nullptr);
 }

@@ -61,13 +61,13 @@ int main()
     State::defaultShader = shader;
     
     // World
-    World world;
+    WorldPtr world = World::Create();
 	// Camera
     CameraPtr camera = Camera::Create();
     camera->SetPosition(glm::vec3(0.f, 1.f, 3.f));
     camera->SetRotation(glm::vec3(glm::radians(-20.f), 0.f, 0.f));
     camera->SetClearColor(glm::vec3(1.f, 1.f, 1.f));
-	world.AddEntity(camera);
+	world->AddEntity(camera);
 
     // Vertex buffer objects
     std::vector<Vertex> vertexsFront{
@@ -136,7 +136,7 @@ int main()
     mesh->AddBuffer(bufferFront, matFront);
 	mesh->AddBuffer(bufferTop, matTop);
     ModelPtr model = Model::Create(mesh);
-    world.AddEntity(model);
+    world->AddEntity(model);
 
     float rotationSpeed = 60.f;
     float currentAngle  =  0.f;
@@ -163,12 +163,12 @@ int main()
         camera->SetProjection(projection);
 
         // Update
-        world.Update(deltaTime);
+        world->Update(deltaTime);
         currentAngle += deltaTime * rotationSpeed;        
-		model->SetRotation(glm::vec3(0.f, glm::radians(currentAngle), 0.f));        
-        
+		model->SetRotation(glm::vec3(0.f, glm::radians(currentAngle), 0.f));
+
         // Draw
-        world.Draw();
+        world->Draw();
 
         // Refresh screen
         glfwSwapBuffers(win);

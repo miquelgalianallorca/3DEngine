@@ -1,6 +1,5 @@
 #include "mesh.h"
 #include "buffer.h"
-#include "material.h"
 #include "shader.h"
 #include "state.h"
 
@@ -50,7 +49,7 @@ Material& Mesh::GetMaterial(size_t index)
 
 void Mesh::Draw()
 {
-    for (auto pair : m_bufferMatPairs)
+    for (auto& pair : m_bufferMatPairs)
     {
         // Prepare material
         pair.second.Prepare();

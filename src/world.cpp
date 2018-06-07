@@ -2,6 +2,31 @@
 #include "camera.h"
 #include <algorithm>
 
+WorldPtr World::Create()
+{
+	std::shared_ptr<World> world(new World(), [](World* p) { delete p; });
+	return world;
+}
+
+World::World()
+{
+	// ...
+}
+
+const EntityPtr World::FindEntity(const std::string& name) const
+{
+	auto entity = std::find_if(entities.begin(), entities.end(),
+		[name](EntityPtr e) { return e->GetName() == name; });
+	return *entity;
+}
+
+EntityPtr World::FindEntity(const std::string& name)
+{
+	auto entity = std::find_if(entities.begin(), entities.end(),
+		[name](EntityPtr e) { return e->GetName() == name; });
+	return *entity;
+}
+
 void World::AddEntity(const std::shared_ptr<Entity>& entity)
 {
 	entities.push_back(entity);

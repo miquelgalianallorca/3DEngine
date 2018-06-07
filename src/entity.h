@@ -2,18 +2,25 @@
 
 #include "common.h"
 
+class Entity;
+typedef std::shared_ptr<Entity> EntityPtr;
+
 class Entity
 {
 public:
-	const glm::vec3& GetPosition() const { return position; }
-	const glm::vec3& GetRotation() const { return rotation;	} // puede ser quat
-	const glm::vec3& GetScale()    const { return scale;    }
-	
-	void        SetPosition(const glm::vec3& pos) { position = pos;      }
-	const void  SetRotation(const glm::vec3& rot) {	rotation = rot;      } // puede ser quat
-	void        SetScale(const glm::vec3& scale)  { this->scale = scale; }
+	const std::string& GetName()       const { return m_name;     }
+	const glm::vec3&   GetPosition()   const { return m_position; }
+	const glm::vec3&   GetRotation()   const { return m_euler;	  }
+	const glm::vec3&   GetScale()      const { return m_scale;    }
+	const glm::quat&   GetQuaternion() const { return m_quat;     }
 
-	void Move(const glm::vec3& vec);	// ver en las diapositivas
+	void        SetName(const std::string name)   { m_name = name;    }
+	void        SetPosition(const glm::vec3& pos) { m_position = pos; }
+	const void  SetRotation(const glm::vec3& rot);
+	void        SetScale(const glm::vec3& scale)  { m_scale = scale;  }
+	const void  SetQuaternion(const glm::quat& q);
+
+	void Move(const glm::vec3& vec);
 
 	virtual void Update(float deltaTime) {}
 	virtual void Draw() {}
@@ -23,7 +30,10 @@ protected:
     virtual ~Entity() {}
 
 private:
-	glm::vec3 position;
-	glm::vec3 rotation;
-	glm::vec3 scale;
+	glm::vec3 m_position;
+	glm::vec3 m_euler; // Rotation in euler angles
+	glm::quat m_quat;  // Rotation quaternion
+	glm::vec3 m_scale;
+
+	std::string m_name;
 };

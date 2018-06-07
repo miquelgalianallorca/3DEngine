@@ -17,6 +17,5 @@ protected:
     Model(const std::shared_ptr<Mesh>& mesh);
 
 private:
-    Model() {}
-	std::shared_ptr<Mesh> mesh;
+    std::shared_ptr<Mesh> mesh;
 };

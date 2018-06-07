@@ -5,13 +5,12 @@
 #include <vector>
 
 class Buffer;
-//class Material;
 class Mesh;
 class Shader;
 
 typedef std::shared_ptr<Mesh> MeshPtr;
 typedef std::pair<std::shared_ptr<Buffer>, std::shared_ptr<Shader>> BufferShaderPair;
-typedef std::pair<std::shared_ptr<Buffer>, Material> BufferMatPair;
+typedef std::pair<std::shared_ptr<Buffer>, Material>                BufferMatPair;
 
 class Mesh
 {
