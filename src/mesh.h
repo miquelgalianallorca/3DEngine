@@ -16,6 +16,7 @@ class Mesh
 {
 public:
     static MeshPtr Create();
+    static MeshPtr Load(const char* filename, const std::shared_ptr<Shader>& shader = nullptr);
 
 	void AddBuffer(const std::shared_ptr<Buffer>& buffer,
 		const std::shared_ptr<Shader>& shader = nullptr);

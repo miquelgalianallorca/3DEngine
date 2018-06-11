@@ -90,7 +90,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../lib/stb;../lib/glew</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../lib/pugixml;../lib/stb;../lib/glew</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -138,6 +138,8 @@
     <ClInclude Include="..\lib\glew\GL\glew.h" />
     <ClInclude Include="..\lib\glfw\glfw3.h" />
     <ClInclude Include="..\lib\glfw\glfw3native.h" />
+    <ClInclude Include="..\lib\pugixml\pugiconfig.hpp" />
+    <ClInclude Include="..\lib\pugixml\pugixml.hpp" />
     <ClInclude Include="..\src\buffer.h" />
     <ClInclude Include="..\src\camera.h" />
     <ClInclude Include="..\src\common.h" />
@@ -154,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\lib\glew\glew.c" />
+    <ClCompile Include="..\lib\pugixml\pugixml.cpp" />
     <ClCompile Include="..\src\buffer.cpp" />
     <ClCompile Include="..\src\camera.cpp" />
     <ClCompile Include="..\src\entity.cpp" />

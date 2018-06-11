@@ -51,7 +51,8 @@ int main()
     }
 
     // Load default shader
-    ShaderPtr shader = Shader::Create(readString("data/vertex.glsl"), readString("data/fragment.glsl"));
+    ShaderPtr shader = Shader::Create(readString("data/vertex.glsl"),
+        readString("data/fragment.glsl"));
     if (!shader)
     {
         cout << "Error: Could not create shaders" << endl;
@@ -64,79 +65,83 @@ int main()
     WorldPtr world = World::Create();
 	// Camera
     CameraPtr camera = Camera::Create();
-    camera->SetPosition(glm::vec3(0.f, 1.f, 3.f));
-    camera->SetRotation(glm::vec3(glm::radians(-20.f), 0.f, 0.f));
-    camera->SetClearColor(glm::vec3(1.f, 1.f, 1.f));
+    camera->SetPosition(glm::vec3(0.f, 10.f, 3.f));
+    camera->SetRotation(glm::vec3(glm::radians(-40.f), 0.f, 0.f));
+    camera->SetClearColor(glm::vec3(0.f, 1.f, 1.f));
 	world->AddEntity(camera);
 
-    // Vertex buffer objects
-    std::vector<Vertex> vertexsFront{
-		// Front
-		Vertex(glm::vec3( .5f,  .5f, -.5f), glm::vec2(1.f, 1.f)), // 0
-        Vertex(glm::vec3(-.5f,  .5f, -.5f), glm::vec2(0.f, 1.f)), // 1
-        Vertex(glm::vec3(-.5f, -.5f, -.5f), glm::vec2(0.f, 0.f)), // 2
-        Vertex(glm::vec3( .5f, -.5f, -.5f), glm::vec2(1.f, 0.f)), // 3
-		// Right
-		Vertex(glm::vec3( .5f,  .5f,  .5f), glm::vec2(1.f, 1.f)), // 4
-		Vertex(glm::vec3( .5f,  .5f, -.5f), glm::vec2(0.f, 1.f)), // 5
-		Vertex(glm::vec3( .5f, -.5f, -.5f), glm::vec2(0.f, 0.f)), // 6
-		Vertex(glm::vec3( .5f, -.5f,  .5f), glm::vec2(1.f, 0.f)), // 7
-		// Back
-		Vertex(glm::vec3( .5f,  .5f,  .5f), glm::vec2(0.f, 1.f)), // 8
-		Vertex(glm::vec3(-.5f,  .5f,  .5f), glm::vec2(1.f, 1.f)), // 9
-		Vertex(glm::vec3(-.5f, -.5f,  .5f), glm::vec2(1.f, 0.f)), // 10
-		Vertex(glm::vec3( .5f, -.5f,  .5f), glm::vec2(0.f, 0.f)), // 11
-		// Left
-		Vertex(glm::vec3(-.5f,  .5f,  .5f), glm::vec2(0.f, 1.f)), // 12
-		Vertex(glm::vec3(-.5f,  .5f, -.5f), glm::vec2(1.f, 1.f)), // 13
-		Vertex(glm::vec3(-.5f, -.5f, -.5f), glm::vec2(1.f, 0.f)), // 14
-		Vertex(glm::vec3(-.5f, -.5f,  .5f), glm::vec2(0.f, 0.f))  // 15
-    };
-    std::vector<uint16_t> indexsFront {
-		0, 1, 2,
-		0, 2, 3,
-		4, 5, 6,
-		4, 6, 7,
-		8, 9, 10,
-		8, 10, 11,
-		12, 13, 14,
-		12, 14, 15
-	};
-	
-	std::vector<Vertex> vertexsTop {
-		// Top
-		Vertex(glm::vec3( .5f,  .5f,  .5f), glm::vec2(1.f, 1.f)), // 0
-		Vertex(glm::vec3(-.5f,  .5f,  .5f), glm::vec2(0.f, 1.f)), // 1
-		Vertex(glm::vec3(-.5f,  .5f, -.5f), glm::vec2(0.f, 0.f)), // 2
-		Vertex(glm::vec3( .5f,  .5f, -.5f), glm::vec2(1.f, 0.f)), // 3
-		// Bottom
-		Vertex(glm::vec3( .5f, -.5f,  .5f), glm::vec2(1.f, 1.f)), // 4
-		Vertex(glm::vec3(-.5f, -.5f,  .5f), glm::vec2(0.f, 1.f)), // 5
-		Vertex(glm::vec3(-.5f, -.5f, -.5f), glm::vec2(0.f, 0.f)), // 6
-		Vertex(glm::vec3( .5f, -.5f, -.5f), glm::vec2(1.f, 0.f))  // 7
-	};
-	std::vector<uint16_t> indexsTop {
-		0, 1, 2,
-		0, 2, 3,
-		4, 5, 6,
-		4, 6, 7
-	};
-    
-	BufferPtr bufferFront = Buffer::Create(vertexsFront, indexsFront);
-	BufferPtr bufferTop   = Buffer::Create(vertexsTop,   indexsTop);
-    
+ //   // Vertex buffer objects
+ //   std::vector<Vertex> vertexsFront{
+	//	// Front
+	//	Vertex(glm::vec3( .5f,  .5f, -.5f), glm::vec2(1.f, 1.f)), // 0
+ //       Vertex(glm::vec3(-.5f,  .5f, -.5f), glm::vec2(0.f, 1.f)), // 1
+ //       Vertex(glm::vec3(-.5f, -.5f, -.5f), glm::vec2(0.f, 0.f)), // 2
+ //       Vertex(glm::vec3( .5f, -.5f, -.5f), glm::vec2(1.f, 0.f)), // 3
+	//	// Right
+	//	Vertex(glm::vec3( .5f,  .5f,  .5f), glm::vec2(1.f, 1.f)), // 4
+	//	Vertex(glm::vec3( .5f,  .5f, -.5f), glm::vec2(0.f, 1.f)), // 5
+	//	Vertex(glm::vec3( .5f, -.5f, -.5f), glm::vec2(0.f, 0.f)), // 6
+	//	Vertex(glm::vec3( .5f, -.5f,  .5f), glm::vec2(1.f, 0.f)), // 7
+	//	// Back
+	//	Vertex(glm::vec3( .5f,  .5f,  .5f), glm::vec2(0.f, 1.f)), // 8
+	//	Vertex(glm::vec3(-.5f,  .5f,  .5f), glm::vec2(1.f, 1.f)), // 9
+	//	Vertex(glm::vec3(-.5f, -.5f,  .5f), glm::vec2(1.f, 0.f)), // 10
+	//	Vertex(glm::vec3( .5f, -.5f,  .5f), glm::vec2(0.f, 0.f)), // 11
+	//	// Left
+	//	Vertex(glm::vec3(-.5f,  .5f,  .5f), glm::vec2(0.f, 1.f)), // 12
+	//	Vertex(glm::vec3(-.5f,  .5f, -.5f), glm::vec2(1.f, 1.f)), // 13
+	//	Vertex(glm::vec3(-.5f, -.5f, -.5f), glm::vec2(1.f, 0.f)), // 14
+	//	Vertex(glm::vec3(-.5f, -.5f,  .5f), glm::vec2(0.f, 0.f))  // 15
+ //   };
+ //   std::vector<uint16_t> indexsFront {
+	//	0, 1, 2,
+	//	0, 2, 3,
+	//	4, 5, 6,
+	//	4, 6, 7,
+	//	8, 9, 10,
+	//	8, 10, 11,
+	//	12, 13, 14,
+	//	12, 14, 15
+	//};
+	//
+	//std::vector<Vertex> vertexsTop {
+	//	// Top
+	//	Vertex(glm::vec3( .5f,  .5f,  .5f), glm::vec2(1.f, 1.f)), // 0
+	//	Vertex(glm::vec3(-.5f,  .5f,  .5f), glm::vec2(0.f, 1.f)), // 1
+	//	Vertex(glm::vec3(-.5f,  .5f, -.5f), glm::vec2(0.f, 0.f)), // 2
+	//	Vertex(glm::vec3( .5f,  .5f, -.5f), glm::vec2(1.f, 0.f)), // 3
+	//	// Bottom
+	//	Vertex(glm::vec3( .5f, -.5f,  .5f), glm::vec2(1.f, 1.f)), // 4
+	//	Vertex(glm::vec3(-.5f, -.5f,  .5f), glm::vec2(0.f, 1.f)), // 5
+	//	Vertex(glm::vec3(-.5f, -.5f, -.5f), glm::vec2(0.f, 0.f)), // 6
+	//	Vertex(glm::vec3( .5f, -.5f, -.5f), glm::vec2(1.f, 0.f))  // 7
+	//};
+	//std::vector<uint16_t> indexsTop {
+	//	0, 1, 2,
+	//	0, 2, 3,
+	//	4, 5, 6,
+	//	4, 6, 7
+	//};
+ //   
+	//BufferPtr bufferFront = Buffer::Create(vertexsFront, indexsFront);
+	//BufferPtr bufferTop   = Buffer::Create(vertexsTop,   indexsTop);
+ //   
     // Load textures
-    TexturePtr textureFront = Texture::Load("data/front.png");
+    /*TexturePtr textureFront = Texture::Load("data/front.png");
     TexturePtr textureTop   = Texture::Load("data/top.png");
     Material matFront(textureFront);
-	Material matTop(textureTop);
+	Material matTop(textureTop);*/
+
+    MeshPtr meshTown = Mesh::Load("data/asian_town.msh.xml");
     
 	// Cube mesh
-    MeshPtr mesh = Mesh::Create();
+    /*MeshPtr mesh = Mesh::Create();
     mesh->AddBuffer(bufferFront, matFront);
 	mesh->AddBuffer(bufferTop, matTop);
-    ModelPtr model = Model::Create(mesh);
-    world->AddEntity(model);
+    ModelPtr model = Model::Create(mesh);*/
+    ModelPtr town = Model::Create(meshTown);
+    //world->AddEntity(model);
+    world->AddEntity(town);
 
     float rotationSpeed = 60.f;
     float currentAngle  =  0.f;
@@ -165,7 +170,7 @@ int main()
         // Update
         world->Update(deltaTime);
         currentAngle += deltaTime * rotationSpeed;        
-		model->SetRotation(glm::vec3(0.f, glm::radians(currentAngle), 0.f));
+		//model->SetRotation(glm::vec3(0.f, glm::radians(currentAngle), 0.f));
 
         // Draw
         world->Draw();
