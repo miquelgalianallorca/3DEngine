@@ -15,6 +15,7 @@ public:
 
 protected:
     Model(const std::shared_ptr<Mesh>& mesh);
+	virtual ~Model() {}
 
 private:
     std::shared_ptr<Mesh> mesh;

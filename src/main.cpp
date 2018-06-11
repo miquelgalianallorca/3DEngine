@@ -36,13 +36,14 @@ int main()
     // Create window
     glfwWindowHint(GLFW_SAMPLES, 8);
     GLFWwindow* win = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "", nullptr, nullptr);
-    if (!win)
+	if (!win)
     {
         cout << "Could not create OpenGL window." << endl;
         glfwTerminate();
         return -1;
     }
-    glfwMakeContextCurrent(win);
+	glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwMakeContextCurrent(win);
     // Prepare Window & OpenGL extensions
     if (!Init())
     {
@@ -65,8 +66,7 @@ int main()
     WorldPtr world = World::Create();
 	// Camera
     CameraPtr camera = Camera::Create();
-    camera->SetPosition(glm::vec3(0.f, 0.03f, 0.f));
-    //camera->SetRotation(glm::vec3(glm::radians(-40.f), 0.f, 0.f));
+    camera->SetPosition(glm::vec3(0.f, 0.01f, 0.f));
     camera->SetClearColor(glm::vec3(0.f, 1.f, 1.f));
 	world->AddEntity(camera);
 	
@@ -75,8 +75,12 @@ int main()
     ModelPtr town = Model::Create(meshTown);
     world->AddEntity(town);
 
-    // float rotationSpeed = 60.f;
-    // float currentAngle  =  0.f;
+	// Camera control local vars =============================
+	float cameraSpeed = 0.05f;
+	int   speedMX, speedMY;
+	int   lastMX = 0;
+	int   lastMY = 0;
+	// =======================================================
 
     // Main loop
     double lastTime = glfwGetTime();
@@ -101,10 +105,15 @@ int main()
 
         // Update
         world->Update(deltaTime);
-        // currentAngle += deltaTime * rotationSpeed;        
-		// model->SetRotation(glm::vec3(0.f, glm::radians(currentAngle), 0.f));
+        
+		// Camera controls
+		double mouseX, mouseY;
+		glfwGetCursorPos(win, &mouseX, &mouseY);
+		speedMX = static_cast<int>(mouseX - lastMX);
+		speedMY = static_cast<int>(mouseY - lastMY);
+		lastMX = mouseX;
+		lastMY = mouseY;
 
-		float cameraSpeed = 0.05f;
 		if (glfwGetKey(win, GLFW_KEY_UP) == GLFW_PRESS)
 		{
 			camera->Move(glm::vec3(0, 0, -cameraSpeed * deltaTime));

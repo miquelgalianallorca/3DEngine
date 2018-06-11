@@ -57,7 +57,7 @@ void World::Update(float deltaTime)
 {
     for (auto entity : entities)
     {
-        entity->Update(deltaTime);
+        entity->_Update(deltaTime);
     }
 }
 

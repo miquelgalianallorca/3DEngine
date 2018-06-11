@@ -20,6 +20,10 @@ public:
 
 	void Prepare();
 
+protected:
+	Camera()  {}
+	virtual ~Camera() {}
+
 private:
 	glm::mat4  projection;
 	glm::ivec4 viewport;
