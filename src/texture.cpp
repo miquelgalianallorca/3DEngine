@@ -22,7 +22,7 @@ Texture::Texture(const char* filename) :
     m_size(glm::vec2(0.f, 0.f))
 {
     // Load image (RGBA)
-    stbi_set_flip_vertically_on_load(false);
+    stbi_set_flip_vertically_on_load(true);
     unsigned char *buffer = stbi_load(filename, &m_size.x, &m_size.y, nullptr, 4);
     if (!buffer)
     {

@@ -58,7 +58,7 @@ MeshPtr Mesh::Load(const char* filename, const std::shared_ptr<Shader>& shader)
             std::vector<glm::vec2> texs;
             for (int i = 0; i < texCoords.size(); i+=2)
             {
-                texs.push_back(glm::vec2(texCoords.at(i), texCoords.at(i + 1)));
+                texs.push_back(glm::vec2(texCoords.at(i), texCoords.at(i+1)));
             }
             if (vertexs.size() != texs.size())
             {
