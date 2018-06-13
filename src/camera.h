@@ -20,12 +20,18 @@ public:
 
 	void Prepare();
 
+	void Update(float deltaTime) override;
+	void AddYaw  (float amount) { m_yaw   += amount; }
+	void AddPitch(float amount) { m_pitch += amount; }
+
 protected:
-	Camera()  {}
+	Camera() : m_yaw(0.f), m_pitch(0.f) {}
 	virtual ~Camera() {}
 
 private:
 	glm::mat4  projection;
 	glm::ivec4 viewport;
 	glm::vec3  clearColor;
+
+	float m_yaw, m_pitch;
 };
