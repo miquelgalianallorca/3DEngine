@@ -34,7 +34,5 @@ void Camera::Prepare()
 
 void Camera::Update(float deltaTime)
 {
-	SetRotation(glm::vec3(m_pitch, 0.f, 0.f));
-	SetRotation(glm::vec3(0.f, m_yaw, 0.f));
 	SetRotation(glm::vec3(m_pitch, m_yaw, 0.f));
 }
