@@ -69,7 +69,39 @@ int main()
     camera->SetPosition(glm::vec3(0.f, 0.01f, 0.f));
     camera->SetClearColor(glm::vec3(0.f, 1.f, 1.f));
 	world->AddEntity(camera);
-	
+
+	//camera->SetCallback(std::bind([win, camera, deltaTime]()
+	//{
+	//	// Camera rotation
+	//	double mouseX, mouseY;
+	//	glfwGetCursorPos(win, &mouseX, &mouseY);
+	//	speedMX = static_cast<int>(mouseX - lastMX);
+	//	speedMY = static_cast<int>(mouseY - lastMY);
+	//	lastMX = mouseX;
+	//	lastMY = mouseY;
+	//	float cameraRotateSpeed = 5.f;
+	//	camera->AddYaw(-speedMX * cameraRotateSpeed * deltaTime);
+	//	camera->AddPitch(-speedMY * cameraRotateSpeed * deltaTime);
+	//	// Camera movement
+	//	if (glfwGetKey(win, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
+	//	{
+	//		camera->Move(glm::vec3(0, 0, -cameraSpeed * deltaTime));
+	//	}
+	//	else if (glfwGetKey(win, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(win, GLFW_KEY_S) == GLFW_PRESS)
+	//	{
+	//		camera->Move(glm::vec3(0, 0, cameraSpeed * deltaTime));
+	//	}
+	//	else if (glfwGetKey(win, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(win, GLFW_KEY_D) == GLFW_PRESS)
+	//	{
+	//		camera->Move(glm::vec3(cameraSpeed * deltaTime, 0, 0));
+	//	}
+	//	else if (glfwGetKey(win, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(win, GLFW_KEY_A) == GLFW_PRESS)
+	//	{
+	//		camera->Move(glm::vec3(-cameraSpeed * deltaTime, 0, 0));
+	//	}	
+	//}));
+	//
+
 	// Mesh
     MeshPtr meshTown = Mesh::Load("data/asian_town.msh.xml");
     ModelPtr town = Model::Create(meshTown);
