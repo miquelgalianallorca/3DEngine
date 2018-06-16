@@ -1,5 +1,5 @@
 #ifdef _MSC_VER
-//#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 #endif
 
 #include "common.h"
@@ -70,38 +70,6 @@ int main()
     camera->SetClearColor(glm::vec3(0.f, 1.f, 1.f));
 	world->AddEntity(camera);
 
-	//camera->SetCallback(std::bind([win, camera, deltaTime]()
-	//{
-	//	// Camera rotation
-	//	double mouseX, mouseY;
-	//	glfwGetCursorPos(win, &mouseX, &mouseY);
-	//	speedMX = static_cast<int>(mouseX - lastMX);
-	//	speedMY = static_cast<int>(mouseY - lastMY);
-	//	lastMX = mouseX;
-	//	lastMY = mouseY;
-	//	float cameraRotateSpeed = 5.f;
-	//	camera->AddYaw(-speedMX * cameraRotateSpeed * deltaTime);
-	//	camera->AddPitch(-speedMY * cameraRotateSpeed * deltaTime);
-	//	// Camera movement
-	//	if (glfwGetKey(win, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
-	//	{
-	//		camera->Move(glm::vec3(0, 0, -cameraSpeed * deltaTime));
-	//	}
-	//	else if (glfwGetKey(win, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(win, GLFW_KEY_S) == GLFW_PRESS)
-	//	{
-	//		camera->Move(glm::vec3(0, 0, cameraSpeed * deltaTime));
-	//	}
-	//	else if (glfwGetKey(win, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(win, GLFW_KEY_D) == GLFW_PRESS)
-	//	{
-	//		camera->Move(glm::vec3(cameraSpeed * deltaTime, 0, 0));
-	//	}
-	//	else if (glfwGetKey(win, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(win, GLFW_KEY_A) == GLFW_PRESS)
-	//	{
-	//		camera->Move(glm::vec3(-cameraSpeed * deltaTime, 0, 0));
-	//	}	
-	//}));
-	//
-
 	// Mesh
     MeshPtr meshTown = Mesh::Load("data/asian_town.msh.xml");
     ModelPtr town = Model::Create(meshTown);
@@ -109,7 +77,6 @@ int main()
 
 	// Camera control local vars =============================
 	float cameraSpeed = 0.05f;
-	int   speedMX, speedMY;
 	int   lastMX = 0;
 	int   lastMY = 0;
 	// =======================================================
@@ -141,11 +108,11 @@ int main()
 		// Camera rotation
 		double mouseX, mouseY;
 		glfwGetCursorPos(win, &mouseX, &mouseY);
-		speedMX = static_cast<int>(mouseX - lastMX);
-		speedMY = static_cast<int>(mouseY - lastMY);
-		lastMX = mouseX;
-		lastMY = mouseY;
-		float cameraRotateSpeed = 5.f;
+		int speedMX = static_cast<int>(mouseX) - lastMX;
+		int speedMY = static_cast<int>(mouseY) - lastMY;
+		lastMX = static_cast<int>(mouseX);
+		lastMY = static_cast<int>(mouseY);
+		float cameraRotateSpeed = 1.f;
 		camera->AddYaw  (-speedMX * cameraRotateSpeed * deltaTime);
 		camera->AddPitch(-speedMY * cameraRotateSpeed * deltaTime);
 		
@@ -166,7 +133,6 @@ int main()
 		{
 			camera->Move(glm::vec3(-cameraSpeed * deltaTime, 0, 0));
 		}
-
 
         // Draw
         world->Draw();
