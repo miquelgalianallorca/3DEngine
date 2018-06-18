@@ -8,6 +8,7 @@ bool Init()
     {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_SCISSOR_TEST);
+		glEnable(GL_CULL_FACE);
         initOk = true;
     }
     return initOk;

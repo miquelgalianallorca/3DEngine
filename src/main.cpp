@@ -76,7 +76,8 @@ int main()
     world->AddEntity(town);
 
 	// Camera control local vars =============================
-	float cameraSpeed = 0.05f;
+	float cameraSpeed       = 0.05f;
+	float cameraRotateSpeed = 1.f;
 	int   lastMX = 0;
 	int   lastMY = 0;
 	// =======================================================
@@ -112,7 +113,6 @@ int main()
 		int speedMY = static_cast<int>(mouseY) - lastMY;
 		lastMX = static_cast<int>(mouseX);
 		lastMY = static_cast<int>(mouseY);
-		float cameraRotateSpeed = 1.f;
 		camera->AddYaw  (-speedMX * cameraRotateSpeed * deltaTime);
 		camera->AddPitch(-speedMY * cameraRotateSpeed * deltaTime);
 		
