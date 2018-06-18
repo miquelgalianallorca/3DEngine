@@ -2,8 +2,6 @@
 uniform sampler2D texSampler;
 uniform bool hasTexture;
 varying vec2 ftex;
-uniform vec3 diffuse;
-uniform vec3 specular;
 
 void main() {
 	if (hasTexture)

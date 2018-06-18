@@ -45,5 +45,11 @@ private:
 	uint32_t vertexShader, fragmentShader;
     
     // Attribute vars location
-	int32_t m_vPosLoc, m_vTexLoc;
+	int32_t m_vPosLoc;
+	int32_t m_vTexLoc;
+	int32_t m_vNormalLoc;
+
+	// Lighting
+	glm::vec3 m_diffuse;
+	glm::vec3 m_specular;
 };

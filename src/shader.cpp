@@ -1,4 +1,5 @@
 #include "shader.h"
+#include "state.h"
 #include "vertex.h"
 #include <iostream>
 
@@ -72,8 +73,9 @@ Shader::Shader(const std::string& vertexShaderSource, const std::string& fragmen
 	}
 
 	// Get and store attribute vars of shaders
-	m_vPosLoc = glGetAttribLocation(m_id, "vpos");
-	m_vTexLoc = glGetAttribLocation(m_id, "vtex");
+	m_vPosLoc    = glGetAttribLocation(m_id, "vpos");
+	m_vTexLoc    = glGetAttribLocation(m_id, "vtex");
+	m_vNormalLoc = glGetAttribLocation(m_id, "vnormal");
 }
 
 Shader::~Shader()
@@ -105,6 +107,13 @@ void Shader::SetupAttribs() const
         glVertexAttribPointer(m_vTexLoc, 2, GL_FLOAT, false, sizeof(Vertex),
             reinterpret_cast<const void*>(offsetof(Vertex, tex)));
     }
+	// Vertex normals
+	if (m_vNormalLoc != -1)
+	{
+		glEnableVertexAttribArray(m_vNormalLoc);
+		glVertexAttribPointer(m_vNormalLoc, 3, GL_FLOAT, false, sizeof(Vertex),
+			reinterpret_cast<const void*>(offsetof(Vertex, normal)));
+	}
 }
 
 // Get location of uniform var
